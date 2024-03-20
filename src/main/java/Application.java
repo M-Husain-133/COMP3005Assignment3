@@ -37,9 +37,20 @@ public class Application {
                         addStudent(first_name, last_name, email, enrollment_date);
                         break;
                     case 3:
+                        System.out.println("Enter id: ");
+                        int id = scanner.nextInt();
+
+                        System.out.println("Enter email: ");
+                        String new_email = scanner.nextLine();
+
+                        updateStudentEmail(id, new_email);
 
                         break;
                     case 4:
+                        System.out.println("Enter id: ");
+                        int sid = scanner.nextInt();
+
+                        deleteStudent(sid);
 
                         break;
                     case 5:
@@ -57,9 +68,54 @@ public class Application {
         }
     }
 
+    private static void deleteStudent(int id){
+        String url = "jdbc:postgresql://localhost:5432/COMP3005";
+        String user = "postgres";
+        String password = "TFERPLGK";
+
+        try {
+            Connection connection = DriverManager.getConnection(url, user, password);
+            Statement stmt = connection.createStatement();
+            String SQL ="DELETE FROM students WHERE student_id=" + id + ";";
+            stmt.executeQuery(SQL);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private static void addStudent(String first_name, String last_name, String email, String enrollment_date){
         Date trueDate = Date.valueOf(enrollment_date);
+        String url = "jdbc:postgresql://localhost:5432/COMP3005";
+        String user = "postgres";
+        String password = "TFERPLGK";
 
+        try {
+            Connection connection = DriverManager.getConnection(url, user, password);
+            Statement stmt = connection.createStatement();
+            String SQL ="INSERT INTO students (first_name, last_name, email, trueDate)\n" +
+                    "VALUES (" + first_name + ", " + last_name + ", " + email + ", " + String.valueOf(trueDate) + ");";
+            stmt.executeQuery(SQL);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    private static void updateStudentEmail(int id, String newEmail){
+        String url = "jdbc:postgresql://localhost:5432/COMP3005";
+        String user = "postgres";
+        String password = "TFERPLGK";
+
+        try {
+            Connection connection = DriverManager.getConnection(url, user, password);
+            Statement stmt = connection.createStatement();
+            String SQL ="UPDATE students\n" +
+                    "SET email =" + newEmail + "\n" +
+                    "WHERE student_id = " + id + ";";
+            stmt.executeQuery(SQL);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
